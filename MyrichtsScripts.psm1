@@ -83,7 +83,7 @@ function Edit-Path {
 
 Export-ModuleMember -Function Edit-Path
 
-function Flush-DNS{
+function Start-FlushDNS{
     <#
     .SYNOPSIS
         Attempt to fix DNS issues.
@@ -91,12 +91,12 @@ function Flush-DNS{
         I had a period where I experienced a lot of DNS issues on my laptop. This cmd script fixed it 9/10 times.
         I converted it to PowerShell to include in my Module. 
     .EXAMPLE
-        PS C:\> Flush-DNS
+        PS C:\> Start-FlushDNS
     .NOTES
         Date latest change: 18/07/2021
     #>
-    Write-Host "flushing"
-    cmd.exe /c "ipconfig /flushdns" | Out-Null
+    Write-Host "StartiFlushDNS
+    cmd.exe /c "ipconfig /StartdFlushDNS | Out-Null
     cmd.exe /c "ipconfig /registerdns" | Out-Null
     cmd.exe /c "ipconfig /release" | Out-Null
     Start-Sleep 5
@@ -107,9 +107,8 @@ function Flush-DNS{
     $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyUp") | Out-Null
 }
 
-Export-ModuleMember -Function Flush-DNS
+Export-ModuleMember -Function Start-FlushDNS
 
-#Requires -RunAsAdministrator
 function Set-Hypervisor {
     <#
     .SYNOPSIS
@@ -129,6 +128,7 @@ function Set-Hypervisor {
     .NOTES
         Date latest change: 05/09/2019
     #>
+    #Requires -RunAsAdministrator
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     Param (
         [parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $false)]
@@ -182,16 +182,33 @@ function Set-Hypervisor {
     }
 }
 
-Export-ModuleMember -Function Get-Reboot
+Export-ModuleMember -Function Set-Hypervisor
 
-function Suspend-Bitlocker{
-    [CmdletBinding(ConfirmImpact = 'High')]
-    Param (
-        #change to 1 to auto re-enable
-        [Switch] $ReEnable,
-        [String] $mp
+function Get-DisableBL {
+    #Requires -RunAsAdministrator
+    $Done = $false
+
+    do{
+        $PercentageDone = get-bitlockervolume c:
+        $PercentageDone = $PercentageDone.EncryptionPercentage
+        if ($PercentageDone -eq 0){
+            $Done = $true
+        }else{
+            Clear-Host
+            Write-Host "Done" $PercentageDone
+            Start-sleep -Seconds 20
+        }
+    }until ($Done)
+}
+
+Export-ModuleMember Get-DisableBL
+
+function Get-YouTubeMP3 {
+    param (
+    [String]    
+    $URL
     )
-    
-    Suspend-BitLocker -MountPoint $mp -RebootCount $ReEnable
-    write-host "Run Resume-BitLocker -MountPoint $mp after reboot!"
+    $Folder = "D:\Muziek\"
+    $sURL  = $URL.Remove($URL.IndexOf('?'))
+    youtube-dl.exe $sURL --output "$Folder%(creator)s  %(title)s.%(ext)s" --extract-audio --audio-format mp3    
 }
