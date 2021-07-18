@@ -1,4 +1,4 @@
 Usefull scripts I wrote.
 TODO:
-- make PSModule
-- Write out function of each script
+- add help to all function
+- add psd1 file
