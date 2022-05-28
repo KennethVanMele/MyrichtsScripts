@@ -136,8 +136,13 @@ function Get-YouTubeMP3 {
     BEGIN {}
     PROCESS {
         $Folder = "D:\Muziek\"
+        if ($URL -like "*list=*"){
         #I have a list of music, this isolates the video url.
         $sURL = $URL.Remove($URL.IndexOf('?'))
+        }
+        else{
+            $sURL = $URL
+        }
         #%(creator)s to add artists name if not in title.
         youtube-dl.exe $sURL --output "$Folder%(creator)s  %(title)s.%(ext)s" --extract-audio --audio-format mp3    
     }
