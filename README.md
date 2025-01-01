@@ -1,3 +1,2 @@
 Usefull scripts I wrote.
-TODO:
-- test
+Copy .psm1 and psd1 file to "C:\Program Files\WindowsPowerShell\Modules\MyrichtsScripts"
